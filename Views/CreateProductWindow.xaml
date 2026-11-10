@@ -1,0 +1,103 @@
+<ui:FluentWindow x:Class="WarehouseManagementApp.Views.CreateProductWindow"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                  Title="Картка товару"
+                  Height="540" Width="480"
+                  WindowStartupLocation="CenterOwner"
+                  ResizeMode="NoResize">
+    <Grid Background="#FFFFFF">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Новий товар"/>
+
+        <StackPanel Grid.Row="1" Margin="20,12">
+            <StackPanel Margin="0,0,0,8">
+                <TextBlock Text="Артикул (SKU)" FontSize="11" Foreground="#6B7280" Margin="2,0,0,4"/>
+                <ui:TextBox x:Name="SkuTextBox"
+                            Text="{Binding Sku, UpdateSourceTrigger=PropertyChanged}"
+                            PlaceholderText="Наприклад, ART-00123"
+                            Height="36"/>
+            </StackPanel>
+
+            <StackPanel Margin="0,0,0,8">
+                <TextBlock Text="Назва товару" FontSize="11" Foreground="#6B7280" Margin="2,0,0,4"/>
+                <ui:TextBox x:Name="NameTextBox"
+                            Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                            PlaceholderText="Введіть назву..."
+                            Height="36"/>
+            </StackPanel>
+
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                    <TextBlock Text="Категорія" FontSize="11" Foreground="#6B7280" Margin="2,0,0,4"/>
+                    <ComboBox x:Name="CategoryComboBox"
+                              ItemsSource="{Binding Categories}"
+                              SelectedItem="{Binding SelectedCategory}"
+                              DisplayMemberPath="Name"
+                              Height="36"
+                              HorizontalAlignment="Stretch"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                    <TextBlock Text="Одиниця виміру" FontSize="11" Foreground="#6B7280" Margin="2,0,0,4"/>
+                    <ComboBox x:Name="UnitComboBox"
+                              ItemsSource="{Binding Units}"
+                              SelectedItem="{Binding SelectedUnit}"
+                              DisplayMemberPath="Name"
+                              Height="36"
+                              HorizontalAlignment="Stretch"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                    <TextBlock Text="Закупівельна ціна (грн)" FontSize="11" Foreground="#6B7280" Margin="2,0,0,4"/>
+                    <ui:TextBox x:Name="PurchasePriceTextBox"
+                                Text="{Binding PurchasePriceText, UpdateSourceTrigger=PropertyChanged}"
+                                Height="36"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                    <TextBlock Text="Роздрібна ціна (грн)" FontSize="11" Foreground="#6B7280" Margin="2,0,0,4"/>
+                    <ui:TextBox x:Name="RetailPriceTextBox"
+                                Text="{Binding RetailPriceText, UpdateSourceTrigger=PropertyChanged}"
+                                Height="36"/>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel>
+                <TextBlock Text="Мінімальний поріг залишку (дефіцит)" FontSize="11" Foreground="#6B7280" Margin="2,0,0,4"/>
+                <ui:TextBox x:Name="MinQuantityTextBox"
+                            Text="{Binding MinQuantityText, UpdateSourceTrigger=PropertyChanged}"
+                            Height="36"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Border Grid.Row="2" Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0" Padding="16,12">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button Content="Скасувати"
+                           Command="{Binding CancelCommand}"
+                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                           Margin="0,0,8,0" Width="100" Height="36"/>
+                <ui:Button Content="Зберегти"
+                           Appearance="Primary"
+                           Command="{Binding SaveCommand}"
+                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                           Width="110" Height="36"/>
+            </StackPanel>
+        </Border>
+
+        <ui:ContentDialogHost x:Name="RootContentDialogHost" Grid.RowSpan="3" Panel.ZIndex="999"/>
+    </Grid>
+</ui:FluentWindow>

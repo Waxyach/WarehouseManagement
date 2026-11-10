@@ -1,0 +1,242 @@
+﻿<UserControl x:Class="WarehouseManagementApp.Views.DocumentsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:converters="clr-namespace:WarehouseManagementApp.Converters">
+    <UserControl.Resources>
+        <converters:DocumentTypeToStringConverter x:Key="DocTypeConverter"/>
+
+        <Style x:Key="RibbonButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1A000000"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="RibbonSepStyle" TargetType="Separator">
+            <Setter Property="Margin" Value="8,4"/>
+            <Setter Property="Width" Value="1"/>
+            <Setter Property="Background" Value="#E5E7EB"/>
+        </Style>
+
+        <Style x:Key="DocColumnHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="SeparatorVisibility" Value="Collapsed"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridColumnHeader">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DocDataGridCellStyle" TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Background="{TemplateBinding Background}" 
+                        BorderBrush="Transparent" 
+                        BorderThickness="0" 
+                        Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DocDataGridRowStyle" TargetType="DataGridRow">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#F9FAFB">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#FFFFFF" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1" Padding="10,6,10,4">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+                <StackPanel Orientation="Horizontal">
+
+                    <Border BorderBrush="Transparent" Padding="4,0,4,2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Style="{StaticResource RibbonButtonStyle}" Command="{Binding CreateDocumentCommand}">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="DocumentAdd24" FontSize="22" Foreground="#2563EB" Margin="0,0,0,2"/>
+                                        <TextBlock Text="Створити" FontSize="11" FontWeight="Medium" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Style="{StaticResource RibbonButtonStyle}" Command="{Binding OpenSelectedDetailsCommand}">
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="DocumentBulletList24" FontSize="22" Foreground="#0284C7" Margin="0,0,0,2"/>
+                                        <TextBlock Text="Переглянути" FontSize="11" FontWeight="Medium" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="1" Text="Документи" FontSize="10" Foreground="#9CA3AF" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <Separator Style="{StaticResource RibbonSepStyle}"/>
+
+                    <Border BorderBrush="Transparent" Padding="4,0,4,2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:TextBox Text="{Binding SearchCounterparty, UpdateSourceTrigger=PropertyChanged}" 
+                                            PlaceholderText="Пошук..."
+                                            Icon="{ui:SymbolIcon Search20}"
+                                            ClearButtonEnabled="True"
+                                            Width="200" Height="34" Margin="2,0,6,0"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="1" Text="Фільтрація" FontSize="10" Foreground="#9CA3AF" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <Separator Style="{StaticResource RibbonSepStyle}"/>
+
+                    <Border BorderBrush="Transparent" Padding="4,0,4,2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="З:" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" Margin="2,0,4,0" Foreground="#6B7280"/>
+                                <DatePicker SelectedDate="{Binding StartDate, Mode=TwoWay}" 
+                                            Width="140" Height="34" Margin="0,0,8,0"/>
+
+                                <TextBlock Text="По:" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" Margin="0,0,4,0" Foreground="#6B7280"/>
+                                <DatePicker SelectedDate="{Binding EndDate, Mode=TwoWay}" 
+                                            Width="140" Height="34" Margin="0,0,8,0"/>
+
+                                <ui:Button Icon="{ui:SymbolIcon CalendarCancel20}" 
+                                           Command="{Binding ResetDateFilterCommand}" 
+                                           ToolTip="Скинути фільтр за датами"
+                                           Appearance="Secondary"
+                                           Height="34" Width="36" Padding="0"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="1" Text="Період дат" FontSize="10" Foreground="#9CA3AF" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <DataGrid Grid.Row="1" 
+                  x:Name="DocumentsGrid"
+                  ItemsSource="{Binding Documents}" 
+                  SelectedItem="{Binding SelectedDocument}"
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True" 
+                  CanUserAddRows="False"
+                  HeadersVisibility="Column"
+                  RowHeaderWidth="0"
+                  GridLinesVisibility="Horizontal"
+                  HorizontalGridLinesBrush="#E5E7EB"
+                  BorderThickness="0"
+                  Background="Transparent"
+                  RowHeight="38"
+                  ColumnHeaderHeight="36"
+                  FontSize="13"
+                  ColumnHeaderStyle="{StaticResource DocColumnHeaderStyle}"
+                  CellStyle="{StaticResource DocDataGridCellStyle}"
+                  RowStyle="{StaticResource DocDataGridRowStyle}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  Margin="12,10,12,0">
+            <DataGrid.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick" 
+                              Command="{Binding ShowDocumentDetailsCommand}" 
+                              CommandParameter="{Binding SelectedDocument}"/>
+            </DataGrid.InputBindings>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Номер" Binding="{Binding DocumentNumber}" Width="150" FontWeight="Bold"/>
+                <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy HH:mm}}" Width="140"/>
+                <DataGridTextColumn Header="Тип документа" Binding="{Binding Type, Converter={StaticResource DocTypeConverter}}" Width="160"/>
+                <DataGridTextColumn Header="Отримувач" Binding="{Binding Counterparty}" Width="*"/>
+
+                <DataGridTemplateColumn Header="Позицій" Width="85">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border CornerRadius="4" Padding="6,2" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding Items.Count, StringFormat='{}{0}'}" FontSize="12" FontWeight="SemiBold"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Сума (грн)" Binding="{Binding TotalAmount, StringFormat={}{0:N2}}" Width="130" FontWeight="SemiBold"/>
+
+                <DataGridTemplateColumn Header="Примітка" Width="160">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Note}" 
+                                       TextTrimming="CharacterEllipsis"
+                                       ToolTip="{Binding Note}"
+                                       VerticalAlignment="Center" 
+                                       Foreground="#6B7280"
+                                       Margin="6,0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border Grid.Row="2" Background="#F3F4F6" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0" Padding="14,6">
+            <ui:TextBlock Appearance="Secondary" FontSize="12"
+                          Text="{Binding Documents.Count, StringFormat='Всього документів у журналі: {0}'}"/>
+        </Border>
+    </Grid>
+</UserControl>
